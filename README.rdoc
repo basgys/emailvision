@@ -9,9 +9,9 @@ Emailvision is a REST API wrapper interacting with Emailvision. It :
 === Credentials
 
 Credentials can be set in the environment.rb file like this:
-EMV_LOGIN = ""
-EMV_PASSWORD = ""
-EMV_KEY = ""
+* EMV_LOGIN = ""
+* EMV_PASSWORD = ""
+* EMV_KEY = ""
 
 Or when you instance your object like this:
 emv = Emailvision::Api.new "login", "password", "key"
@@ -44,7 +44,7 @@ Method list can be found @ http://emvapi.emv3.com/apiccmd/services/rest?_wadl&_t
 
 <b>Summary</b>
 
-* Name : campaign.last
+* Name : campaign/last
 * Method : GET
 * Parameters : token, limit
 
