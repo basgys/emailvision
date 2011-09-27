@@ -127,12 +127,17 @@ XML schema definition of endpoints are available @ http://{server_name}/{endpoin
 
 ```ruby
 emv = Emailvision::Api.new do |o|
+	# Considering that user/pass/key/... are already set
 	o.endpoint = "apiccmd"
 end
  
 emv.open_connection # Should return true
  
-emv.get.campaign.last(:limit => 5).call
+if emv.connected?
+	emv.get.campaign.last(:limit => 5).call
+else
+	# Something went wrong...
+end
 ```
 
 <b>Explanation</b>
@@ -153,6 +158,7 @@ TODO
 
  * Write some specs
  * Improves exception system
+ * Generate endpoint.yml file automaticaly
  * Improves logger (mode debug, log file, ..)
  * Capacity to automatically renew token when it's no longer valid
  * Write some example in wiki pages

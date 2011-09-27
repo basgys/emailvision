@@ -13,7 +13,7 @@ Changelog
  * Possibility to log traffic
  * More readable exceptions
  
-### /!\ breaks backward compatibility /!\
+### /!\ breaks backward compatibility /!\ 
 	
 1.1.0
 -----
