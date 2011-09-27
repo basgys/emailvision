@@ -14,17 +14,19 @@ Credentials can be set in the environment.rb file like this:
 * EMV_KEY = ""
 
 Or when you instance your object like this:
-emv = Emailvision::Api.new "login", "password", "key"
+emv = Emailvision::Api.new "login", "password", "key", "endpoint"
 
-=== Login/Logout
+=== Endpoints
 
-* Login	 		-> emv.login;
-* Logout 		-> emv.logout;
-* Check status	-> emv.connected?;
+Endpoints available :
+
+* apiccmd (segment, campaign, message, ...)
+* apitransactional (transactional message)
+* apimember (member list)
 
 === Method calling
 
-Method list can be found @ http://emvapi.emv3.com/apiccmd/services/rest?_wadl&_type=xml
+Method list can be found @ http://{server_name}/{endpoint}/services/rest?_wadl&_type=xml
 
 ==== Example #1
 
@@ -44,12 +46,14 @@ Method list can be found @ http://emvapi.emv3.com/apiccmd/services/rest?_wadl&_t
 
 <b>Summary</b>
 
+* Endpoint : apiccmd
 * Name : campaign/last
 * Method : GET
 * Parameters : token, limit
 
 <b>Method calling syntax</b>
 
+* emv = Emailvision::Api.new "login", "password", "key", "apiccmd"
 * emv.get.campaign.last(:limit => 5).call
 
 <b>Explanation</b>
@@ -57,3 +61,12 @@ Method list can be found @ http://emvapi.emv3.com/apiccmd/services/rest?_wadl&_t
 * <b>campaign.last</b> is the method name
 * <b>(:limit => 5)</b> is the parameters. token is automatically given
 * <b>call</b> is the keyword to perform the API call
+
+=== Helpers
+
+Some often-used methods has been implemented
+
+* <b>emv.login</b> Login to given endpoint
+* <b>emv.logout</b> Logout from given endpoint
+* <b>emv.logged_in?</b> Check connection status
+

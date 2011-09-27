@@ -6,11 +6,12 @@ Gem::Specification.new do |s|
   s.description = "REST API wrapper interacting with Emailvision"
   s.authors     = ["Bastien Gysler"]
   s.email       = 'basgys@gmail.com'
-  s.files       = ["lib/emailvision.rb"]
+  s.files       = Dir["lib/**/*"]
   s.homepage    = 'http://github.com/basgys/emailvision'
-  
-  s.files = Dir["lib/**/*"]
   
   s.add_dependency("httparty", "~> 0.8.0")
   s.add_dependency("crack", "~> 0.3.0")
+  # TODO : Dependencies for inflector and logger
+  # TODO : convert rdoc to markdown
+  # TODO : Update README
 end
