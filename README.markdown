@@ -23,16 +23,18 @@ Configuration
 ### #1 (Rails configuration file)
 If you use Rails, you can set your config in the config/emailvision.yml file:
 
-<b>development:</b><br />
-&nbsp;&nbsp;&nbsp;<b>server_name:</b> emv_server_name<br />
-&nbsp;&nbsp;&nbsp;<b>login:</b> my_login<br />
-&nbsp;&nbsp;&nbsp;<b>password:</b> my_password<br />
-&nbsp;&nbsp;&nbsp;<b>key:</b> my_key<br />
-<b>production:</b><br />
-&nbsp;&nbsp;&nbsp;<b>server_name:</b> emv_server_name<br />
-&nbsp;&nbsp;&nbsp;<b>login:</b> my_login<br />
-&nbsp;&nbsp;&nbsp;<b>password:</b> my_password<br />
-&nbsp;&nbsp;&nbsp;<b>key:</b> my_key<br />
+```yaml
+development:
+	server_name: emv_server_name
+	login: my_login
+	password: my_password
+	key: my_key
+production:
+	server_name: emv_server_name
+	login: my_login
+	password: my_password
+	key: my_key
+```	
 
 ### #2a (on loading)
 It can also be set when you initialize your object:
@@ -100,17 +102,19 @@ XML schema definition of endpoints are available @ http://{server_name}/{endpoin
 
 <b>XML Schema</b>
 
-> &lt;resource path="campaign/last/"&gt;<br />
-> &nbsp;&lt;method name="GET"&gt;<br />
-> &nbsp;&nbsp;&nbsp;&lt;request&gt;<br />
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;param name="token" style="query" type="xs:string"/&gt;<br />
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;param name="limit" style="query" type="xs:int"/&gt;<br />
-> &nbsp;&nbsp;&nbsp;&lt;/request&gt;<br />
-> &nbsp;&nbsp;&nbsp;&lt;response&gt;<br />
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;representation mediaType="application/xml"/&gt;<br />
-> &nbsp;&nbsp;&nbsp;&lt;/response&gt;<br />
-> &nbsp;&lt;/method&gt;<br />
-> &lt;/resource&gt;<br />
+```xml
+<resource path="campaign/last/">
+	<method name="GET">
+		<request>
+			<param name="token" style="query" type="xs:string"/>
+			<param name="limit" style="query" type="xs:int"/>
+		</request>
+		<response>
+			<representation mediaType="application/xml"/>
+		</response>
+	</method>
+</resource>
+```
 
 <b>Summary</b>
 
