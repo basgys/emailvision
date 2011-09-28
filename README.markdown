@@ -9,6 +9,29 @@ Emailvision is a REST API wrapper interacting with Emailvision. It :
 * Is well integrated with Rails, but can be used alone though
 * Is actively developed
 
+Install
+-------
+
+### Without bundler
+
+```shell
+$ gem install emailvision
+```
+
+### With bundler
+
+Past this line to your Gemfile
+
+```ruby
+gem 'emailvision'
+```
+
+Run bundler
+
+```shell
+$ bundle
+```
+
 Configuration
 -------------
 
@@ -26,7 +49,7 @@ If you use Rails, you can set your config in the config/emailvision.yml file
 
 Generate the config file:
 
-```
+```shell
 rails generate emailvision:install
 ```
 
