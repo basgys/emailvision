@@ -1,5 +1,5 @@
-Emailvision Gem
-===============
+Emailvision ruby/rails library
+==============================
 
 Emailvision is a REST API wrapper interacting with Emailvision. It :
 
