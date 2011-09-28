@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'emailvision'
-  s.version     = '1.1.0'
+  s.version     = '2.0.0'
   s.date        = '2011-09-26'
   s.summary     = "Emailvision"
   s.description = "REST API wrapper interacting with Emailvision"
@@ -11,7 +11,4 @@ Gem::Specification.new do |s|
   
   s.add_dependency("httparty", "~> 0.8.0")
   s.add_dependency("crack", "~> 0.3.0")
-  # TODO : Dependencies for inflector and logger
-  # TODO : convert rdoc to markdown
-  # TODO : Update README
 end
