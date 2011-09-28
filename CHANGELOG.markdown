@@ -5,13 +5,11 @@ Changelog
 -----
 
 ### enhancements
- * A changelog file !
+ * Better integration with Rails
  * Can uses multiple endpoints
- * Can be used in IRB console
- * A real config file
+ * Can be used outside of Rails
  * A cleaner initializer
- * Possibility to log traffic
- * More readable exceptions
+ * A changelog file !
  
 ### /!\ breaks backward compatibility /!\ 
 	

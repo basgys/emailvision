@@ -4,7 +4,7 @@ Emailvision Gem
 Emailvision is a REST API wrapper interacting with Emailvision. It :
 
 * Has a very comfortable syntax
-* Support changes on Emailvision API (dynamic call)
+* Will support method addition on Emailvision API (dynamic call)
 * Has a clear documentation
 * Is well integrated with Rails, but can be used alone though
 * Is actively developed
@@ -21,20 +21,13 @@ Configuration
  * token
 
 ### #1 (Rails configuration file)
-If you use Rails, you can set your config in the config/emailvision.yml file:
+If you use Rails, you can set your config in the config/emailvision.yml file
 
-```yaml
-development:
-	server_name: emv_server_name
-	login: my_login
-	password: my_password
-	key: my_key
-production:
-	server_name: emv_server_name
-	login: my_login
-	password: my_password
-	key: my_key
-```	
+Generate the config file:
+
+```
+rails generate emailvision:install
+```
 
 ### #2a (on loading)
 It can also be set when you initialize your object:
@@ -158,7 +151,6 @@ TODO
 
  * Write some specs
  * Improves exception system
- * Generate endpoint.yml file automaticaly
  * Improves logger (mode debug, log file, ..)
  * Capacity to automatically renew token when it's no longer valid
  * Write some example in wiki pages
