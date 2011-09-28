@@ -19,6 +19,7 @@ Configuration
  * key
  * endpoint
  * token
+ * debug (true/false)
 
 ### #1 (Rails configuration file)
 If you use Rails, you can set your config in the config/emailvision.yml file
@@ -146,11 +147,16 @@ end
  * You can set your API call and perform it later (lazy loading),
    so you won't have to add your business logic in the view
    
+DEBUG   
+-----
+
+Debug mode show request sent/received in the console
+   
 TODO
 ----
 
  * Write some specs
  * Improves exception system
- * Improves logger (mode debug, log file, ..)
+ * Improves logger (log file, ..)
  * Capacity to automatically renew token when it's no longer valid
  * Write some example in wiki pages
