@@ -11,5 +11,8 @@ module Emailvision
   autoload :Logger, 'emailvision/logger'
   autoload :Relation, 'emailvision/relation'
   
-  require 'emailvision/railtie' if defined?(Rails)
+  if defined?(Rails)
+	  require 'emailvision/railtie'
+	  require 'generators/install'
+	end
 end

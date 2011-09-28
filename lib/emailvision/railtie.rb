@@ -2,6 +2,10 @@ require 'rails'
 
 module Emailvision
 	class Railtie < Rails::Railtie
+		
+		generators do
+		  require 'generators/install'
+		end		
 	
 	  config.to_prepare do
 	    file = "#{Rails.root}/config/emailvision.yml"
