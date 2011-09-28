@@ -5,17 +5,17 @@ module Emailvision
       @instance = instance
       @http_verb = http_verb
       @uri = []
-      @params = {}
+      @options = {}
     end
     
     def call(*args)
-      @params.merge! extract_args(args)
-      @instance.call @http_verb, @uri.join('/'), @params
+      @options.merge! extract_args(args)
+      @instance.call @http_verb, @uri.join('/'), @options
     end
   
     def method_missing(method, *args)
       @uri << method.to_s.camelize(:lower)
-      @params.merge! extract_args(args)
+      @options.merge! extract_args(args)
       self            
     end    
     

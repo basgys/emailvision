@@ -2,20 +2,18 @@ module Emailvision
   class Api    
     include HTTParty
     default_timeout 30
-    format :plain
+    format :xml
     
     # HTTP verbs allowed to trigger a call-chain
     HTTP_VERBS = [:get, :post].freeze  
 
     # Attributes
     class << self
-      attr_accessor :token, :server_name, :endpoint, :login, :password, :key
+      attr_accessor :token, :server_name, :endpoint, :login, :password, :key, :debug
     end
-    attr_accessor :token, :server_name, :endpoint, :login, :password, :key
+    attr_accessor :token, :server_name, :endpoint, :login, :password, :key, :debug
 
-    def initialize(params = {})
-      @default_params = {}
-      
+    def initialize(params = {})      
       yield(self) if block_given?      
       
       self.server_name ||= params[:server_name]  || self.class.server_name
@@ -23,60 +21,10 @@ module Emailvision
       self.login       ||= params[:login]        || self.class.login
       self.password    ||= params[:password]     || self.class.password
       self.key         ||= params[:key]          || self.class.key
-      self.token       ||= params[:token]        || self.class.token      
-    end
+      self.token       ||= params[:token]        || self.class.token
+      self.debug       ||= params[:debug]        || self.class.debug      
+    end   
     
-    # Generate call-chain triggers
-    HTTP_VERBS.each do |http_verb|
-      define_method(http_verb) do
-        Emailvision::Relation.new(self, http_verb)
-      end
-    end
-
-    # Perform the API call
-    # http_verb = (get, post, ...)
-    # method = Method to call
-    # params = Extra parameters (optionnal)
-    def call(http_verb, method, params = {})
-      params ||= {}      
-
-      # Check presence of these essential attributes
-      unless server_name and endpoint
-        raise Emailvision::Exception.new "Cannot make an API call without a server name and an endpoint !"
-      end
-
-      # Build uri and parameters
-      uri = base_uri + method
-      params = @default_params.merge params
-      
-      # Send request
-      logger.send "#{uri} with params : #{params}"
-      raw_result = self.class.send http_verb, uri, :query => params
-      
-      # Parse response
-      http_code = raw_result.header.code
-      parsed_result = Crack::XML.parse raw_result.body
-      logger.receive parsed_result.inspect
-
-      # Return response or raise an exception if request failed
-      if (http_code == "200") and (parsed_result and parsed_result["response"])
-        parsed_result["response"]["result"] || parsed_result["response"]
-      else        
-        raise Emailvision::Exception.new "#{http_code} - #{parsed_result}"
-      end
-    end
-
-    # Connection token
-    def token=(value)
-      @token = value
-      @default_params = @default_params.merge({:token => token})
-    end
-
-    # Base uri
-    def base_uri
-      "https://#{server_name}/#{endpoint}/services/rest/"
-    end
-
     # ----------------- BEGIN Pre-configured methods -----------------
 
     # Login to Emailvision API
@@ -108,14 +56,73 @@ module Emailvision
     def invalidate_token!
       self.token = nil
     end
-    # ----------------- END Pre-configured methods -----------------
+    # ----------------- END Pre-configured methods -----------------    
+
+    # Perform the API call
+    # http_verb = (get, post, ...)
+    # method = Method to call
+    # content = Content to send (optionnal)
+    def call(http_verb, method, content = {})
+      params ||= {}      
+
+      # Check presence of these essential attributes
+      unless server_name and endpoint
+        raise Emailvision::Exception.new "Cannot make an API call without a server name and an endpoint !"
+      end
+
+      # Build uri and parameters
+      uri = base_uri + method
+      query = token ? {:token => token} : {}
+      query.merge! content
+      
+      # Send request
+      logger.send "#{uri} with content : #{content}"
+      response = self.class.send http_verb, uri, :query => query
+      
+      # Parse response
+      http_code = response.header.code
+      content = Crack::XML.parse response.body
+      logger.receive content.inspect
+
+      # Return response or raise an exception if request failed
+      if (http_code == "200") and (content and content["response"])
+        content["response"]["result"] || content["response"]
+      else        
+        raise Emailvision::Exception.new "#{http_code} - #{content}"
+      end
+    end    
+
+		# Set token
+    # Override
+    def token=(value)
+      @token = value
+    end
+    
+    # Set endpoint
+    # Override
+    def endpoint=(value)
+	    invalidate_token!	    
+	  	@endpoint = value	  	
+	  end
+
+    # Base uri
+    def base_uri
+      "http://#{server_name}/#{endpoint}/services/rest/"
+    end
+    
+    # Generate call-chain triggers
+    HTTP_VERBS.each do |http_verb|
+      define_method(http_verb) do
+        Emailvision::Relation.new(self, http_verb)
+      end
+    end    
     
 	  private
 	
 	  def logger      
 	    if @logger.nil?
 	      @logger = Emailvision::Logger.new(STDOUT)
-	      @logger.level = Logger::WARN
+	      @logger.level = (debug ? Logger::DEBUG : Logger::WARN)
 	    end
 	    @logger
 	  end    
