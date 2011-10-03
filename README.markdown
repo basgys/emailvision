@@ -151,6 +151,14 @@ DEBUG
 -----
 
 Debug mode show request sent/received in the console
+
+It's also possible to monitor the traffic by using a proxy like this : 
+
+```ruby
+Emailvision::Api.http_proxy 'localhost', 8888
+```
+
+Then all requests will be redirected through the given proxy
    
 TODO
 ----
