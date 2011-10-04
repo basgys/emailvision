@@ -146,6 +146,48 @@ end
  * You cannot change the following order : http verbe / method name / call
  * You can set your API call and perform it later (lazy loading),
    so you won't have to add your business logic in the view
+
+Send data
+----------
+
+Data can be sent through URI, Query parameters and body. Here is an example of each :
+
+
+### URI
+
+Method to call : member/getMemberByEmail/{token}/{email}
+
+```ruby
+emv.get.member.get_member_by_email(:uri =>{:email => "my@mail.com"}).call
+```
+
+### Query parameters
+
+Method to call : member/getMemberById/
+
+```ruby
+emv.get.member.get_member_by_id(:id => 10).call
+```
+
+### Body
+
+Method to call : member/updateMember/
+
+```ruby
+body = {
+  "synchroMember"=>{
+    "dynContent"=>{
+      "entry"=>[
+        {"key"=>"FIRSTNAME", "value"=>"Bastien"},
+        {"key"=>"LASTNAME", "value"=>"Gysler"}
+      ]
+    }, 
+    "email"=>"my@mail.com"
+  }
+}
+
+emv.post.member.update_member(:body => body).call
+```
    
 DEBUG   
 -----
