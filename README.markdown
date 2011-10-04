@@ -116,7 +116,7 @@ Data can be sent through URI, Query parameters and body. Here is an example of e
 Method to call : member/getMemberByEmail/{token}/{email}
 
 ```ruby
-emv.get.member.get_member_by_email(:uri =>{:email => "my@mail.com"}).call
+emv.get.member.get_member_by_email(:uri => ["my@email.com"]).call
 ```
 
 ### Query parameters
@@ -152,7 +152,7 @@ emv.post.member.update_member(:body => body).call
 You can also combine these ways to send data
 
 ```ruby
-id => 10, :uri => {:email => "my@email.com"}, :body => {:foo => "bar"}
+id => 10, :uri => ["my@email.com"], :body => {:foo => "bar"}
 ```
    
 DEBUG   
