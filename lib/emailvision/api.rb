@@ -73,9 +73,13 @@ module Emailvision
 
       # == Build uri ==
       uri = base_uri + method
-      uri += token ? "/#{token}/" : ""
-      uri += parameters[:uri] ? parameters[:uri].join('/') : ""
-      parameters.delete :uri
+      if parameters[:uri]
+        uri += token ? "/#{token}/" : '/'
+        uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).join '/'
+        parameters.delete :uri
+      else
+        parameters[:token] = token
+      end
       
       # == Build body ==
       # 1. Extract body from parameters
