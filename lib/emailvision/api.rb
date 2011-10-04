@@ -3,6 +3,7 @@ module Emailvision
     include HTTParty
     default_timeout 30
     format :xml
+    headers 'Content-Type' => 'text/xml'
     
     # HTTP verbs allowed to trigger a call-chain
     HTTP_VERBS = [:get, :post].freeze  
@@ -61,25 +62,41 @@ module Emailvision
     # Perform the API call
     # http_verb = (get, post, ...)
     # method = Method to call
-    # content = Content to send (optionnal)
-    def call(http_verb, method, content = {})
+    # parameters = Parameters to send (optionnal)
+    def call(http_verb, method, parameters = {})
       params ||= {}      
 
-      # Check presence of these essential attributes
+      # == Check presence of these essential attributes ==
       unless server_name and endpoint
         raise Emailvision::Exception.new "Cannot make an API call without a server name and an endpoint !"
       end
 
-      # Build uri and parameters
+      # == Build uri ==
       uri = base_uri + method
-      query = token ? {:token => token} : {}
-      query.merge! content
+      if parameters[:uri]
+        uri += token ? "/#{token}/" : '/'
+        uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).join '/'
+        parameters.delete :uri
+      elsif parameters[:body]
+        uri += token ? "/#{token}/" : '/'
+      else
+        parameters[:token] = token
+      end
       
-      # Send request
-      logger.send "#{uri} with content : #{content}"
-      response = self.class.send http_verb, uri, :query => query
+      # == Build body ==
+      # 1. Extract body from parameters
+      body = parameters[:body] || {}
+      parameters.delete :body
+      # 2. Camelize all keys
+      body = Emailvision::Tools.r_camelize body
+      # 3. Convert to xml
+      body_xml = Emailvision::Tools.to_xml_as_is body
       
-      # Parse response
+      # == Send request ==
+      logger.send "#{uri} with query : #{parameters} and body : #{body}"
+      response = self.class.send http_verb, uri, :query => parameters, :body => body_xml, :timeout => 30
+      
+      # == Parse response ==
       http_code = response.header.code
       content = Crack::XML.parse response.body
       logger.receive content.inspect

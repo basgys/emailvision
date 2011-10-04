@@ -10,6 +10,7 @@ module Emailvision
   autoload :Exception, 'emailvision/exception'
   autoload :Logger, 'emailvision/logger'
   autoload :Relation, 'emailvision/relation'
+  autoload :Tools, 'emailvision/tools'
   
   if defined?(Rails)
 	  require 'emailvision/railtie'
