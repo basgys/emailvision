@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.1.0
+-----
+
+### enhancement
+ * Improves parameters flexibility (uri, body, query)
+
+### bug fix
+
 2.0.0
 -----
 
