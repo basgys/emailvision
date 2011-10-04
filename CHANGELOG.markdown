@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.1
+-----
+
+### bug fix
+ * Token was not automatically given for requests with only a body
+
 2.1.0
 -----
 
