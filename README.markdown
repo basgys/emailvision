@@ -175,14 +175,14 @@ Method to call : member/updateMember/
 
 ```ruby
 body = {
-  "synchroMember"=>{
-    "dynContent"=>{
-      "entry"=>[
-        {"key"=>"FIRSTNAME", "value"=>"Bastien"},
-        {"key"=>"LASTNAME", "value"=>"Gysler"}
+  :synchro_member=>{
+    :dyn_content=>{
+      :entry=>[
+        {:key=>"FIRSTNAME", :value=>"Bastien"},
+        {:key=>"LASTNAME", :value=>"Gysler"}
       ]
     }, 
-    "email"=>"my@mail.com"
+    :email=>"my@mail.com"
   }
 }
 
