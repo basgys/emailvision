@@ -89,7 +89,7 @@ Method calling syntax
 ---------------------
 
 ```ruby
-emv.get.campaign.last(:limit => 5).call
+emv.get.campaign.last(:uri => [5]).call
 ```
 
 <b>Explanation</b>
@@ -97,7 +97,7 @@ emv.get.campaign.last(:limit => 5).call
  * <b>emv</b> instance of Emailvision::Api
  * <b>get</b> is the HTTP verb to use
  * <b>campaign.last</b> is the method name
- * <b>(:limit => 5)</b> is the parameter
+ * <b>:uri => [5]</b> is the parameter (limit = 5)
  * <b>call</b> is the keyword to perform the API call
  
 ### Notice
