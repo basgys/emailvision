@@ -19,5 +19,45 @@ module Emailvision
       end
     end
     
+    def self.to_xml_as_is(obj)
+      obj_xml = ""
+      xml = Builder::XmlMarkup.new(:target=> obj_xml)
+      xml.instruct! :xml, :version=> "1.0"
+            
+      tag_obj xml, obj
+      
+      obj_xml
+    end
+    
+    private
+    
+    def self.tag_obj(xml, obj)
+      if obj.is_a? Hash
+        obj.each do |key, value|
+          if value.is_a?(Hash)
+            eval <<-EOS
+              xml.#{key} do
+                tag_obj xml, value
+              end
+            EOS
+          elsif value.is_a?(Array)
+            value.each do |item|
+              eval <<-EOS
+                xml.#{key} do
+                  tag_obj xml, item
+                end
+              EOS
+            end
+          else
+            eval <<-EOS
+              xml.#{key} '#{value}'
+            EOS
+          end
+        end
+      else
+        obj
+      end
+    end
+    
   end    
 end

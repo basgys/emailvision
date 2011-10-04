@@ -84,7 +84,7 @@ module Emailvision
       # 2. Camelize all keys
       body = Emailvision::Tools.r_camelize body
       # 3. Convert to xml
-      body_xml = body.to_xml :skip_types => true, :root => body.each_key.first.to_s
+      body_xml = Emailvision::Tools.to_xml_as_is body
       
       # == Send request ==
       logger.send "#{uri} with query : #{parameters} and body : #{body}"
