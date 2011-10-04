@@ -188,6 +188,14 @@ body = {
 
 emv.post.member.update_member(:body => body).call
 ```
+
+### Notice
+
+You can also combine these ways to send data
+
+```ruby
+id => 10, :uri => {:email => "my@email.com"}, :body => {:foo => "bar"}
+```
    
 DEBUG   
 -----
