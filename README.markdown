@@ -108,60 +108,19 @@ emv.close_connection # Logout from the given endpoint
 emv.connected? # Check connection status
 ```
 
-How to call a method
---------------------
-
-In this section you will see how to "convert" a method definition.
-
-XML schema definition of endpoints are available @ http://{server_name}/{endpoint}/services/rest?_wadl&_type=xml
-
-### Example #1 (get last campaigns)
-
-<b>XML Schema</b>
-
-```xml
-<resource path="campaign/last/">
-	<method name="GET">
-		<request>
-			<param name="token" style="query" type="xs:string"/>
-			<param name="limit" style="query" type="xs:int"/>
-		</request>
-		<response>
-			<representation mediaType="application/xml"/>
-		</response>
-	</method>
-</resource>
-```
-
-<b>Summary</b>
-
- * Endpoint : apiccmd
- * Name : campaign/last
- * Method : GET
- * Parameters : token, limit
-
-<b>Method calling syntax</b>
+Method calling syntax
+---------------------
 
 ```ruby
-emv = Emailvision::Api.new do |o|
-	# Considering that user/pass/key/... are already set
-	o.endpoint = "apiccmd"
-end
- 
-emv.open_connection # Should return true
- 
-if emv.connected?
-	emv.get.campaign.last(:limit => 5).call
-else
-	# Something went wrong...
-end
+emv.get.campaign.last(:limit => 5).call
 ```
 
 <b>Explanation</b>
 
+ * <b>emv</b> instance of Emailvision::Api
  * <b>get</b> is the HTTP verb to use
  * <b>campaign.last</b> is the method name
- * <b>(:limit => 5)</b> is the parameters. (token is automatically given)
+ * <b>(:limit => 5)</b> is the parameter
  * <b>call</b> is the keyword to perform the API call
  
 ### Notice
@@ -169,11 +128,68 @@ end
  * You cannot change the following order : http verbe / method name / call
  * You can set your API call and perform it later (lazy loading),
    so you won't have to add your business logic in the view
+
+Parameters
+----------
+
+Data can be sent through URI, Query parameters and body. Here is an example of each :
+
+### URI
+
+Method to call : member/getMemberByEmail/{token}/{email}
+
+```ruby
+emv.get.member.get_member_by_email(:uri => ["my@email.com"]).call
+```
+
+### Query parameters
+
+Method to call : member/getMemberById/
+
+```ruby
+emv.get.member.get_member_by_id(:id => 10).call
+```
+
+### Body
+
+Method to call : member/updateMember/
+
+```ruby
+body = {
+  :synchro_member=>{
+    :dyn_content=>{
+      :entry=>[
+        {:key=>"FIRSTNAME", :value=>"Bastien"},
+        {:key=>"LASTNAME", :value=>"Gysler"}
+      ]
+    }, 
+    :email=>"my@mail.com"
+  }
+}
+
+emv.post.member.update_member(:body => body).call
+```
+
+### Notice
+
+You can also combine these ways to send data
+
+```ruby
+id => 10, :uri => ["my@email.com"], :body => {:foo => "bar"}
+```
    
 DEBUG   
 -----
 
 Debug mode show request sent/received in the console
+
+It's also possible to monitor the traffic by using a proxy like this : 
+
+```ruby
+Emailvision::Api.http_proxy 'localhost', 8888
+```
+
+Then all requests will be redirected through the given proxy
    
 TODO
 ----
