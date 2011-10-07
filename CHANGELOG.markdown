@@ -1,6 +1,16 @@
 Changelog
 =========
 
+2.1.2
+-----
+
+### enhancement
+ * Adds the notification messaging API
+
+### bug fix
+ * Fixes char escaping problem during xml conversion
+
+
 2.1.1
 -----
 
