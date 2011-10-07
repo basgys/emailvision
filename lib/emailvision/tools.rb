@@ -34,24 +34,22 @@ module Emailvision
     def self.tag_obj(xml, obj)
       if obj.is_a? Hash
         obj.each do |key, value|
-          if value.is_a?(Hash)
-            eval <<-EOS
+          if value.is_a?(Hash)            
+            eval(%{
               xml.#{key} do
-                tag_obj xml, value
+                tag_obj(xml, value)
               end
-            EOS
+            })
           elsif value.is_a?(Array)
             value.each do |item|
-              eval <<-EOS
+              eval(%{
                 xml.#{key} do
-                  tag_obj xml, item
+                  tag_obj(xml, item)
                 end
-              EOS
+              })
             end
           else
-            eval <<-EOS
-              xml.#{key} '#{value}'
-            EOS
+            eval %{xml.#{key}(%{#{value}})}
           end
         end
       else
