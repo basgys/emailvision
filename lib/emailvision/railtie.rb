@@ -19,6 +19,8 @@ module Emailvision
   	    Emailvision::Api.password     = config['password']
   	    Emailvision::Api.key          = config['key']	      
   	    Emailvision::Api.debug        = config['debug']  	    
+  	    
+  	    Emailvision::Notification.debug = config['debug']
 	    end	    
 	  end		
 	

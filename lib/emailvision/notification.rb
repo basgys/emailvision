@@ -5,7 +5,18 @@ module Emailvision
     format :xml
     headers 'Content-Type' => 'application/xml;charset=utf-8', 'encoding' => 'UTF-8', 'Accept' => '*/*'
     
-    def send(body)      
+    class << self
+      attr_accessor :debug
+    end    
+    attr_accessor :debug
+    
+    def initialize(params = {})      
+      yield(self) if block_given?      
+      
+      self.debug ||= params[:debug] || self.class.debug      
+    end    
+    
+    def send(body, params = {})      
       # == Processing body ==
       body_xml = Emailvision::Tools.to_xml_as_is body
       
@@ -28,7 +39,7 @@ module Emailvision
 	  def logger      
 	    if @logger.nil?
 	      @logger = Emailvision::Logger.new(STDOUT)
-	      @logger.level = Logger::DEBUG
+	      @logger.level = (debug ? Logger::DEBUG : Logger::WARN)
 	    end
 	    @logger
 	  end    

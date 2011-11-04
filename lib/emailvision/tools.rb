@@ -20,11 +20,13 @@ module Emailvision
     end
     
     def self.to_xml_as_is(obj)
-      obj_xml = ""
-      xml = Builder::XmlMarkup.new(:target=> obj_xml)
-      xml.instruct! :xml, :version=> "1.0"
-            
-      tag_obj xml, obj
+      obj_xml = ""      
+      
+      unless obj.nil? or obj.empty?
+        xml = Builder::XmlMarkup.new(:target=> obj_xml)
+        xml.instruct! :xml, :version=> "1.0"            
+        tag_obj xml, obj
+      end
       
       obj_xml
     end

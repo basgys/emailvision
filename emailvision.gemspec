@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'emailvision'
-  s.version     = '2.1.2'
+  s.version     = '2.1.3'
   s.date        = '2011-09-26'
   s.summary     = "Emailvision"
   s.description = "REST API wrapper interacting with Emailvision"

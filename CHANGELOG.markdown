@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.3
+-----
+
+### bug fix
+ * Decreases verbosity of Notification class
+
 2.1.2
 -----
 
