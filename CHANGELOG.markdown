@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.1.5
+-----
+
+### enhancement
+ * Catches parsing errors on response body
+ * Sanitizes request parameters like Date or Time
+
 2.1.4
 -----
 
