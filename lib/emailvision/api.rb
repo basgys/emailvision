@@ -98,7 +98,12 @@ module Emailvision
       
       # == Parse response ==
       http_code = response.header.code
-      content = Crack::XML.parse response.body
+      content = {}
+      begin
+        content = Crack::XML.parse response.body
+      rescue MultiXml::ParseError => e
+        logger.send "#{uri} Error when parsing response body (#{e.to_s})"
+      end
       logger.receive content.inspect
 
       # Return response or raise an exception if request failed
