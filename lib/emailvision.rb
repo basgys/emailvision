@@ -2,6 +2,7 @@ require 'crack/xml'
 require 'httparty'
 require 'active_support/inflector'
 require 'logger'
+require 'builder'
 
 # Emailvision API wrapper
 #

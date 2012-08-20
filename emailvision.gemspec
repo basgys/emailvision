@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   
   s.add_dependency("httparty", "~> 0.8.0")
   s.add_dependency("crack", "~> 0.3.0")
+  s.add_dependency("builder", "~> 3.0.0")  
 end
