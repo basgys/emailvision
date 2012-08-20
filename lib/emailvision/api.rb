@@ -71,6 +71,9 @@ module Emailvision
         raise Emailvision::Exception.new "Cannot make an API call without a server name and an endpoint !"
       end
 
+      # == Sanitize parameters ==
+      parameters = Emailvision::Tools.sanitize_parameters(parameters)
+
       # == Build uri ==
       uri = base_uri + method
       if parameters[:uri]

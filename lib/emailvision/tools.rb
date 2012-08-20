@@ -1,5 +1,25 @@
 module Emailvision  
   class Tools
+
+    def self.sanitize_parameters(parameters)
+      r_each(parameters) do |value|
+        if value.kind_of?(DateTime) or value.kind_of?(Time)
+          date_time_format(value)
+        elsif value.kind_of?(Date)
+          date_format(value)
+        else
+          value
+        end
+      end
+    end
+
+    def self.date_time_format(datetime)
+      datetime.utc.strftime("%Y-%m-%dT%H:%M:%S")
+    end
+
+    def self.date_format(datetime)
+      date.strftime('%Y-%m-%d')
+    end
     
     def self.r_camelize(obj)
       if obj.is_a?(Hash)
@@ -30,6 +50,25 @@ module Emailvision
       
       obj_xml
     end
+
+    def self.r_each(hash, &block)
+      return enum_for(:dfs, hash) unless block
+ 
+      result = {}
+      hash.map do |k,v|
+        result[k] = if v.is_a? Array
+          v.map do |elm|
+            r_each(elm, &block)
+          end
+        elsif v.is_a? Hash
+          r_each(v, &block)
+        else
+          yield(v)
+        end
+      end
+
+      result
+    end    
     
     private
     
