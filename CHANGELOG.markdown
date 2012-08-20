@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.4
+-----
+
+### bug fix
+ * Adds builder to dependencies
+
 2.1.3
 -----
 
