@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.6
+-----
+
+### bug fix
+ * "undefined method map for…." error
+
 2.1.5
 -----
 
