@@ -55,16 +55,20 @@ module Emailvision
       return enum_for(:dfs, hash) unless block
  
       result = {}
-      hash.map do |k,v|
-        result[k] = if v.is_a? Array
-          v.map do |elm|
-            r_each(elm, &block)
+      if hash.is_a?(Hash)
+        hash.map do |k,v|
+          result[k] = if v.is_a? Array
+            v.map do |elm|
+              r_each(elm, &block)
+            end
+          elsif v.is_a? Hash
+            r_each(v, &block)
+          else
+            yield(v)
           end
-        elsif v.is_a? Hash
-          r_each(v, &block)
-        else
-          yield(v)
         end
+      else
+        result = yield(hash)
       end
 
       result
