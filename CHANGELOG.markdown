@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.7
+-----
+
+### bug fix
+ * Remove time zone conversion for Time
+
 2.1.6
 -----
 
