@@ -14,7 +14,7 @@ module Emailvision
     end
 
     def self.date_time_format(datetime)
-      datetime.utc.strftime("%Y-%m-%dT%H:%M:%S")
+      datetime.strftime("%Y-%m-%dT%H:%M:%S")
     end
 
     def self.date_format(datetime)
