@@ -78,7 +78,7 @@ module Emailvision
       uri = base_uri + method
       if parameters[:uri]
         uri += token ? "/#{token}/" : '/'
-        uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).join '/'
+        uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).compact.join '/'
         parameters.delete :uri
       elsif parameters[:body]
         uri += token ? "/#{token}/" : '/'
