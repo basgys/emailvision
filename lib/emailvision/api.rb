@@ -79,30 +79,30 @@ module Emailvision
       # == Sanitize parameters ==
       parameters = Emailvision::Tools.sanitize_parameters(parameters)
 
-      # == Build uri ==
-      uri = base_uri + method
-      if parameters[:uri]
-        uri += token ? "/#{token}/" : '/'
-        uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).compact.join '/'
-        parameters.delete :uri
-      elsif parameters[:body]
-        uri += token ? "/#{token}/" : '/'
-      else
-        parameters[:token] = token
-      end
-      
-      # == Build body ==
-      # 1. Extract body from parameters
-      body = parameters[:body] || {}
-      parameters.delete :body
-      # 2. Camelize all keys
-      body = Emailvision::Tools.r_camelize body
-      # 3. Convert to xml
-      body_xml = Emailvision::Tools.to_xml_as_is body
-      
-      # == Send request ==      
       retries = 2
       begin
+        # == Build uri ==
+        uri = base_uri + method
+        if parameters[:uri]
+          uri += token ? "/#{token}/" : '/'
+          uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).compact.join '/'
+          parameters.delete :uri
+        elsif parameters[:body]
+          uri += token ? "/#{token}/" : '/'
+        else
+          parameters[:token] = token
+        end
+        
+        # == Build body ==
+        # 1. Extract body from parameters
+        body = parameters[:body] || {}
+        parameters.delete :body
+        # 2. Camelize all keys
+        body = Emailvision::Tools.r_camelize body
+        # 3. Convert to xml
+        body_xml = Emailvision::Tools.to_xml_as_is body
+      
+        # == Send request ==      
         logger.send "#{uri} with query : #{parameters} and body : #{body}"
         response = self.class.send http_verb, uri, :query => parameters, :body => body_xml, :timeout => 30      
       
