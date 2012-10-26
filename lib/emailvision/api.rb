@@ -43,8 +43,13 @@ module Emailvision
     # - True if the connection has been destroyed
     # - False if the connection cannot be destroyed or has already been destroyed    
     def close_connection
-      return false unless connected?
-      get.connect.close.call if connected?
+      if connected?
+        get.connect.close.call
+      else
+        return false
+      end
+    rescue Emailvision::Exception => e
+    ensure
       invalidate_token!
       not connected?
     end
@@ -95,25 +100,55 @@ module Emailvision
       # 3. Convert to xml
       body_xml = Emailvision::Tools.to_xml_as_is body
       
-      # == Send request ==
-      logger.send "#{uri} with query : #{parameters} and body : #{body}"
-      response = self.class.send http_verb, uri, :query => parameters, :body => body_xml, :timeout => 30
-      
-      # == Parse response ==
-      http_code = response.header.code
-      content = {}
+      # == Send request ==      
+      retries = 2
       begin
-        content = Crack::XML.parse response.body
-      rescue MultiXml::ParseError => e
-        logger.send "#{uri} Error when parsing response body (#{e.to_s})"
-      end
-      logger.receive content.inspect
+        logger.send "#{uri} with query : #{parameters} and body : #{body}"
+        response = self.class.send http_verb, uri, :query => parameters, :body => body_xml, :timeout => 30      
+      
+        # == Parse response ==
+        http_code = response.header.code
+        content = {}
+        begin
+          content = Crack::XML.parse response.body
+        rescue MultiXml::ParseError => e
+          logger.send "#{uri} Error when parsing response body (#{e.to_s})"
+        end
+        logger.receive content.inspect
 
-      # Return response or raise an exception if request failed
-      if (http_code == "200") and (content and content["response"])
-        content["response"]["result"] || content["response"]
-      else        
-        raise Emailvision::Exception.new "#{http_code} - #{content}"
+        # Return response or raise an exception if request failed
+        if (http_code == "200") and (content and content["response"])
+          response = content["response"]["result"] || content["response"] 
+        else        
+          raise Emailvision::Exception.new "#{http_code} - #{content}"
+        end
+
+      return response
+
+      rescue Emailvision::Exception => e
+        if e.message =~ /Your session has expired/
+          self.close_connection          
+          self.open_connection
+          if((retries -= 1) >= 0)
+            retry
+          else
+            raise e
+          end
+        else
+          raise e          
+        end
+      rescue Errno::ECONNRESET => e
+        if((retries -= 1) >= 0)
+          retry
+        else
+          raise e
+        end
+      rescue Timeout::Error => e
+        if((retries -= 1) >= 0)
+          retry
+        else
+          raise e
+        end
       end
     end    
 
