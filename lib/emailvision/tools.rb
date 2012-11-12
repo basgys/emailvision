@@ -17,7 +17,7 @@ module Emailvision
       datetime.strftime("%Y-%m-%dT%H:%M:%S")
     end
 
-    def self.date_format(datetime)
+    def self.date_format(date)
       date.strftime('%Y-%m-%d')
     end
     
