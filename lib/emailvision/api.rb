@@ -126,7 +126,7 @@ module Emailvision
       return response
 
       rescue Emailvision::Exception => e
-        if e.message =~ /Your session has expired/
+        if e.message =~ /Your session has expired/ or e.message =~ /The maximum number of connection allowed per session has been reached/
           self.close_connection          
           self.open_connection
           if((retries -= 1) >= 0)
