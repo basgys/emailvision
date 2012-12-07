@@ -18,7 +18,7 @@ module Emailvision
     end
 
     def self.date_format(date)
-      date.strftime('%Y-%m-%d')
+      date.strftime('%d/%m/%Y')
     end
     
     def self.r_camelize(obj)
