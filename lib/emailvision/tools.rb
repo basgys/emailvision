@@ -14,11 +14,15 @@ module Emailvision
     end
 
     def self.date_time_format(datetime)
-      datetime.strftime("%Y-%m-%dT%H:%M:%S")
+      datetime.strftime("%Y-%m-%dT%H:%M:%S") 
+    rescue ArgumentError
+      datetime      
     end
 
     def self.date_format(date)
-      date.strftime('%d/%m/%Y')
+      date.strftime('%d/%m/%Y') 
+    rescue ArgumentError
+      date
     end
     
     def self.r_camelize(obj)
