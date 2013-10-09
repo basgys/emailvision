@@ -1,7 +1,7 @@
 Emailvision ruby/rails library
 ==============================
 
-[![Build Status](https://secure.travis-ci.org/basgys/emailvision.png)](http://travis-ci.org/basgys/emailvision)
+[![Build Status](https://secure.travis-ci.org/basgys/emailvision.png)](http://travis-ci.org/basgys/emailvision) [![Code Climate](https://codeclimate.com/github/basgys/emailvision.png)](https://codeclimate.com/github/basgys/emailvision)
 
 Emailvision is a REST API wrapper interacting with Emailvision. It :
 
