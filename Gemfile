@@ -9,6 +9,7 @@ end
 
 group :test do  
   gem 'guard-rspec'
+  gem 'rake' # Required by Travis CI
   gem 'rspec'
   gem 'vcr'
   gem 'webmock', '< 1.12'
