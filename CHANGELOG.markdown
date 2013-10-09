@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.16
+-----
+
+### update
+ * Update "crack" to 0.4.x
+
 2.1.15
 -----
 
