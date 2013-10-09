@@ -7,8 +7,6 @@ module Emailvision
           date_time_format(value.to_datetime)
         elsif value.respond_to(:to_date)
           date_format(value.to_date)
-        #elsif value.kind_of?(File) or value.kind_of?(Tempfile)
-        #  Base64.encode64(value.read)
         else
           value
         end
