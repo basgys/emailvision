@@ -4,6 +4,15 @@ Changelog
 2.1.18
 -----
 
+### bug
+ * Prevent errors on invalid date
+
+### enhancement
+ * Support Date strings
+
+2.1.17
+-----
+
 ### update
  * Update "builder" to 3.1.x
 
