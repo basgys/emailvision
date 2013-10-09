@@ -3,18 +3,10 @@ module Emailvision
 
     def self.sanitize_parameters(parameters)
       r_each(parameters) do |value|        
-        if value.respond_to?(:to_datetime)
-          begin
-            date_time_format(value.to_datetime) 
-          rescue StandardError
-            value
-          end
-        elsif value.respond_to?(:to_date)
-          begin
-            date_time_format(value.to_date) 
-          rescue StandardError
-            value
-          end
+        if value.kind_of?(DateTime) or value.kind_of?(Time)
+          date_time_format(value.to_datetime)
+        elsif value.kind_of?(Date)
+          date_time_format(value.to_date) 
         else
           value
         end
