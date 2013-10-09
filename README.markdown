@@ -11,6 +11,12 @@ Emailvision is a REST API wrapper interacting with Emailvision. It :
 * Is well integrated with Rails, but can be used alone though
 * Is actively developed
 
+Support
+-------
+
+ruby 1.9.3
+ruby 2.0
+
 Install
 -------
 
