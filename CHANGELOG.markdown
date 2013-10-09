@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.15
+-----
+
+### enhancement
+ * Add support for different kind of date/time classes like ActiveSupport::TimeWithZone
+
 2.1.7
 -----
 
