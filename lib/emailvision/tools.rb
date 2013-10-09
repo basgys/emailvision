@@ -3,10 +3,12 @@ module Emailvision
 
     def self.sanitize_parameters(parameters)
       r_each(parameters) do |value|
-        if value.kind_of?(DateTime) or value.kind_of?(Time)
-          date_time_format(value)
-        elsif value.kind_of?(Date)
-          date_format(value)
+        if value.respond_to?(:to_datetime)
+          date_time_format(value.to_datetime)
+        elsif value.respond_to(:to_date)
+          date_format(value.to_date)
+        #elsif value.kind_of?(File) or value.kind_of?(Tempfile)
+        #  Base64.encode64(value.read)
         else
           value
         end
