@@ -1,6 +1,8 @@
 Emailvision ruby/rails library
 ==============================
 
+[![Build Status](https://secure.travis-ci.org/basgys/emailvision.png)](http://travis-ci.org/basgys/emailvision)
+
 Emailvision is a REST API wrapper interacting with Emailvision. It :
 
 * Has a very comfortable syntax
@@ -194,8 +196,11 @@ Then all requests will be redirected through the given proxy
 TODO
 ----
 
- * Write some specs
  * Improves exception system
  * Improves logger (log file, ..)
- * Capacity to automatically renew token when it's no longer valid
  * Write some example in wiki pages
+
+Author
+------
+
+Bastien Gysler :: [bastiengysler.com](http://www.bastiengysler.com/) :: @basgys
