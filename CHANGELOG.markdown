@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.18
+-----
+
+### update
+ * Update "builder" to 3.1.x
+
 2.1.16
 -----
 
