@@ -2,11 +2,19 @@ module Emailvision
   class Tools
 
     def self.sanitize_parameters(parameters)
-      r_each(parameters) do |value|
+      r_each(parameters) do |value|        
         if value.respond_to?(:to_datetime)
-          date_time_format(value.to_datetime)
-        elsif value.respond_to(:to_date)
-          date_format(value.to_date)
+          begin
+            date_time_format(value.to_datetime) 
+          rescue StandardError
+            value
+          end
+        elsif value.respond_to?(:to_date)
+          begin
+            date_time_format(value.to_date) 
+          rescue StandardError
+            value
+          end
         else
           value
         end
@@ -14,15 +22,11 @@ module Emailvision
     end
 
     def self.date_time_format(datetime)
-      datetime.strftime("%Y-%m-%dT%H:%M:%S") 
-    rescue ArgumentError
-      datetime      
+      datetime.strftime("%Y-%m-%dT%H:%M:%S")
     end
 
     def self.date_format(date)
-      date.strftime('%d/%m/%Y') 
-    rescue ArgumentError
-      date
+      date.strftime('%d/%m/%Y')
     end
     
     def self.r_camelize(obj)
