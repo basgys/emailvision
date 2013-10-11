@@ -6,7 +6,7 @@ module Emailvision
         if value.kind_of?(DateTime) or value.kind_of?(Time)
           date_time_format(value.to_datetime)
         elsif value.kind_of?(Date)
-          date_time_format(value.to_date) 
+          date_format(value.to_date) 
         else
           value
         end
