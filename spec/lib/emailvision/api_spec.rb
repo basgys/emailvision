@@ -13,6 +13,10 @@ describe Emailvision::Api do
     )
   end
 
+  before do
+    subject.stub(:logger).and_return(double("logger").as_null_object)
+  end
+
   it "opens connection successfuly" do
     VCR.use_cassette('opens connection successfuly') do
       subject.open_connection
@@ -44,6 +48,24 @@ describe Emailvision::Api do
 
   it "returns base_uri" do
     expect(subject.base_uri).to eq("http://#{subject.server_name}/#{subject.endpoint}/services/rest/")
+  end
+
+  context 'Attributes' do
+
+    [:server_name, :endpoint, :login, :password, :key, :debug].each do |attribute|
+
+      it "inherites #{attribute} from class" do
+        described_class.send("#{attribute}=", "my value")
+        expect(described_class.new.send(attribute)).to eq("my value")
+      end
+
+      it "does not inherites #{attribute} from class" do
+        described_class.send("#{attribute}=", "my value")
+        expect(described_class.new(attribute => "another value").send(attribute)).to eq("another value")
+      end
+
+    end
+
   end
 
   context 'Relation' do
