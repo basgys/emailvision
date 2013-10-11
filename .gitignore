@@ -1,3 +1,4 @@
 *.gem
 *.html
 Gemfile.lock
+tmp
