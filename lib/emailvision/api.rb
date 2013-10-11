@@ -1,5 +1,5 @@
 module Emailvision
-  class Api    
+  class Api
     include HTTParty
     default_timeout 30
     format :xml
@@ -15,7 +15,7 @@ module Emailvision
     end
     attr_accessor *ATTRIBUTES
 
-    def initialize(params = {})      
+    def initialize(params = {})
       yield(self) if block_given?
       assign_attributes(params)
     end   
@@ -121,7 +121,7 @@ module Emailvision
 
       rescue Emailvision::Exception => e
         if e.message =~ /Your session has expired/ or e.message =~ /The maximum number of connection allowed per session has been reached/
-          self.close_connection          
+          self.close_connection
           self.open_connection
           if((retries -= 1) >= 0)
             retry
@@ -146,7 +146,7 @@ module Emailvision
       end
     end    
 
-		# Set token
+    # Set token
     # Override
     def token=(value)
       @token = value
@@ -155,9 +155,9 @@ module Emailvision
     # Set endpoint
     # Override
     def endpoint=(value)
-	    close_connection
-	  	@endpoint = value	  	
-	  end
+      close_connection
+      @endpoint = value      
+    end
 
     # Base uri
     def base_uri
@@ -169,24 +169,24 @@ module Emailvision
       define_method(http_verb) do
         Emailvision::Relation.new(self, http_verb)
       end
-    end    
-    
-	  private
-
-    def assign_attributes(parameters)
-      parameters or return
-      ATTRIBUTES.each do |attribute|
-        public_send("#{attribute}=", (parameters[attribute] || self.class.public_send(attribute)))
-      end     
     end
-	
-	  def logger      
-	    if @logger.nil?
-	      @logger = Emailvision::Logger.new(STDOUT)
-	      @logger.level = (debug ? Logger::DEBUG : Logger::WARN)
-	    end
-	    @logger
-	  end    
     
-  end    
+    private
+
+      def assign_attributes(parameters)
+        parameters or return
+        ATTRIBUTES.each do |attribute|
+          public_send("#{attribute}=", (parameters[attribute] || self.class.public_send(attribute)))
+        end
+      end
+    
+      def logger
+        if @logger.nil?
+          @logger = Emailvision::Logger.new(STDOUT)
+          @logger.level = (debug ? Logger::DEBUG : Logger::WARN)
+        end
+        @logger
+      end
+    
+  end
 end
