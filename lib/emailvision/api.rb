@@ -95,13 +95,7 @@ module Emailvision
         else
           raise e          
         end
-      rescue Errno::ECONNRESET => e
-        if((retries -= 1) >= 0)
-          retry
-        else
-          raise e
-        end
-      rescue Timeout::Error => e
+      rescue Errno::ECONNRESET, Timeout::Error => e
         if((retries -= 1) >= 0)
           retry
         else
