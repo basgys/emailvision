@@ -74,51 +74,15 @@ module Emailvision
       parameters = Emailvision::Tools.sanitize_parameters(parameters)
 
       retries = 2
-      begin
-        # == Build uri ==
-        uri = base_uri + method
-        if parameters[:uri]
-          uri += token ? "/#{token}/" : '/'
-          uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).compact.join '/'
-          parameters.delete :uri
-        elsif parameters[:body]
-          uri += token ? "/#{token}/" : '/'
-        else
-          parameters[:token] = token
-        end
-        
-        # == Build body ==
-        # 1. Extract body from parameters
-        body = parameters[:body] || {}
-        parameters.delete :body
-        # 2. Camelize all keys
-        body = Emailvision::Tools.r_camelize body
-        # 3. Convert to xml
-        body_xml = Emailvision::Tools.to_xml_as_is body
-      
-        # == Send request ==      
+      begin        
+        uri = prepare_uri(method, parameters)
+        body = prepare_body(parameters)
+
         logger.send "#{uri} with query : #{parameters} and body : #{body}"
-        response = self.class.send http_verb, uri, :query => parameters, :body => body_xml, :timeout => 30      
-      
-        # == Parse response ==
-        http_code = response.header.code
-        content = {}
-        begin
-          content = Crack::XML.parse response.body
-        rescue MultiXml::ParseError => e
-          logger.send "#{uri} Error when parsing response body (#{e.to_s})"
-        end
-        logger.receive content.inspect
 
-        # Return response or raise an exception if request failed
-        if (http_code == "200") and (content and content["response"])
-          response = content["response"]["result"] || content["response"] 
-        else        
-          raise Emailvision::Exception.new "#{http_code} - #{content}"
-        end
+        response = perform_request(http_verb, uri, parameters, body)
 
-      return response
-
+        extract_response(response)
       rescue Emailvision::Exception => e
         if e.message =~ /Your session has expired/ or e.message =~ /The maximum number of connection allowed per session has been reached/
           self.close_connection
@@ -172,6 +136,53 @@ module Emailvision
     end
     
     private
+
+      def prepare_uri(method, parameters)
+        uri = base_uri + method
+        if parameters[:uri]
+          uri += token ? "/#{token}/" : '/'
+          uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).compact.join '/'
+          parameters.delete :uri
+        elsif parameters[:body]
+          uri += token ? "/#{token}/" : '/'
+        else
+          parameters[:token] = token
+        end
+        uri
+      end
+
+      def prepare_body(parameters)
+        body = parameters[:body] || {}
+        parameters.delete :body
+        # 2. Camelize all keys
+        body = Emailvision::Tools.r_camelize body
+        # 3. Convert to xml
+        Emailvision::Tools.to_xml_as_is body        
+      end
+
+      def perform_request(http_verb, uri, parameters, body)
+        self.class.send http_verb, uri, :query => parameters, :body => body, :timeout => 30      
+      end
+
+      def extract_response(response)
+        http_code = response.header.code
+        content = {}
+        begin
+          content = Crack::XML.parse response.body
+        rescue MultiXml::ParseError => e
+          logger.send "#{uri} Error when parsing response body (#{e.to_s})"
+        end
+        logger.receive content.inspect
+
+        if (http_code == "200") and (content and content["response"])
+          response = content["response"]["result"] || content["response"] 
+        else        
+          raise Emailvision::Exception.new "#{http_code} - #{content}"
+        end
+      end
+
+      def format_response()
+      end
 
       def assign_attributes(parameters)
         parameters or return
