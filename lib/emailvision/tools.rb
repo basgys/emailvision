@@ -1,12 +1,12 @@
-module Emailvision  
+module Emailvision
   class Tools
 
     def self.sanitize_parameters(parameters)
-      r_each(parameters) do |value|        
+      r_each(parameters) do |value|
         if value.kind_of?(DateTime) or value.kind_of?(Time)
           date_time_format(value.to_datetime)
         elsif value.kind_of?(Date)
-          date_format(value.to_date) 
+          date_format(value.to_date)
         else
           value
         end
@@ -20,7 +20,7 @@ module Emailvision
     def self.date_format(date)
       date.strftime('%d/%m/%Y')
     end
-    
+
     def self.r_camelize(obj)
       if obj.is_a?(Hash)
         new_obj = {}
@@ -38,16 +38,16 @@ module Emailvision
         obj
       end
     end
-    
+
     def self.to_xml_as_is(obj)
-      obj_xml = ""      
-      
+      obj_xml = ""
+
       unless obj.nil? or obj.empty?
         xml = ::Builder::XmlMarkup.new(:target=> obj_xml)
-        xml.instruct! :xml, :version=> "1.0"            
+        xml.instruct! :xml, :version=> "1.0"
         tag_obj xml, obj
       end
-      
+
       obj_xml
     end
 
@@ -72,35 +72,35 @@ module Emailvision
       end
 
       result
-    end    
-    
+    end
+
     private
-    
-    def self.tag_obj(xml, obj)
-      if obj.is_a? Hash
-        obj.each do |key, value|
-          if value.is_a?(Hash)            
-            eval(%{
-              xml.#{key} do
-                tag_obj(xml, value)
-              end
-            })
-          elsif value.is_a?(Array)
-            value.each do |item|
+
+      def self.tag_obj(xml, obj)
+        if obj.is_a? Hash
+          obj.each do |key, value|
+            if value.is_a?(Hash)
               eval(%{
                 xml.#{key} do
-                  tag_obj(xml, item)
+                  tag_obj(xml, value)
                 end
               })
+            elsif value.is_a?(Array)
+              value.each do |item|
+                eval(%{
+                  xml.#{key} do
+                    tag_obj(xml, item)
+                  end
+                })
+              end
+            else
+              eval %{xml.#{key}(%{#{value}})}
             end
-          else
-            eval %{xml.#{key}(%{#{value}})}
           end
+        else
+          obj
         end
-      else
-        obj
       end
-    end
-    
-  end    
+
+  end
 end

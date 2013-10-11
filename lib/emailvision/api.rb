@@ -4,7 +4,7 @@ module Emailvision
     default_timeout 30
     format :xml
     headers 'Content-Type' => 'text/xml'
-    
+
     # HTTP verbs allowed to trigger a call-chain
     HTTP_VERBS = [:get, :post].freeze
     ATTRIBUTES = [:token, :server_name, :endpoint, :login, :password, :key, :debug].freeze
@@ -18,8 +18,8 @@ module Emailvision
     def initialize(params = {})
       yield(self) if block_given?
       assign_attributes(params)
-    end   
-    
+    end
+
     # ----------------- BEGIN Pre-configured methods -----------------
 
     # Login to Emailvision API
@@ -63,7 +63,7 @@ module Emailvision
     # method = Method to call
     # parameters = Parameters to send (optionnal)
     def call(http_verb, method, parameters = {})
-      params ||= {}      
+      params ||= {}
 
       # == Check presence of these essential attributes ==
       unless server_name and endpoint
@@ -74,7 +74,7 @@ module Emailvision
       parameters = Emailvision::Tools.sanitize_parameters(parameters)
 
       retries = 2
-      begin        
+      begin
         uri = prepare_uri(method, parameters)
         body = prepare_body(parameters)
 
@@ -93,7 +93,7 @@ module Emailvision
             raise e
           end
         else
-          raise e          
+          raise e
         end
       rescue Errno::ECONNRESET, Timeout::Error => e
         if((retries -= 1) >= 0)
@@ -102,33 +102,33 @@ module Emailvision
           raise e
         end
       end
-    end    
+    end
 
     # Set token
     # Override
     def token=(value)
       @token = value
     end
-    
+
     # Set endpoint
     # Override
     def endpoint=(value)
       close_connection
-      @endpoint = value      
+      @endpoint = value
     end
 
     # Base uri
     def base_uri
       "http://#{server_name}/#{endpoint}/services/rest/"
     end
-    
+
     # Generate call-chain triggers
     HTTP_VERBS.each do |http_verb|
       define_method(http_verb) do
         Emailvision::Relation.new(self, http_verb)
       end
     end
-    
+
     private
 
       def prepare_uri(method, parameters)
@@ -151,11 +151,11 @@ module Emailvision
         # 2. Camelize all keys
         body = Emailvision::Tools.r_camelize body
         # 3. Convert to xml
-        Emailvision::Tools.to_xml_as_is body        
+        Emailvision::Tools.to_xml_as_is body
       end
 
       def perform_request(http_verb, uri, parameters, body)
-        self.class.send http_verb, uri, :query => parameters, :body => body, :timeout => 30      
+        self.class.send http_verb, uri, :query => parameters, :body => body, :timeout => 30
       end
 
       def extract_response(response)
@@ -170,7 +170,7 @@ module Emailvision
 
         if (http_code == "200") and (content and content["response"])
           response = content["response"]["result"] || content["response"] 
-        else        
+        else
           raise Emailvision::Exception.new "#{http_code} - #{content}"
         end
       end
@@ -184,7 +184,7 @@ module Emailvision
           public_send("#{attribute}=", (parameters[attribute] || self.class.public_send(attribute)))
         end
       end
-    
+
       def logger
         if @logger.nil?
           @logger = Emailvision::Logger.new(STDOUT)
@@ -192,6 +192,6 @@ module Emailvision
         end
         @logger
       end
-    
+
   end
 end

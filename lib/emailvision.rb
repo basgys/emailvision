@@ -13,9 +13,9 @@ module Emailvision
   autoload :Relation, 'emailvision/relation'
   autoload :Tools, 'emailvision/tools'
   autoload :Notification, 'emailvision/notification'
-  
+
   if defined?(Rails)
-	  require 'emailvision/railtie'
-	  require 'generators/install'
-	end
+    require 'emailvision/railtie'
+    require 'generators/install'
+  end
 end
