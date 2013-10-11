@@ -161,7 +161,7 @@ module Emailvision
     # Set endpoint
     # Override
     def endpoint=(value)
-	    invalidate_token!	    
+	    close_connection
 	  	@endpoint = value	  	
 	  end
 
