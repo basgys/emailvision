@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Emailvision::Api do
 
   subject do 
-    Emailvision::Api.new(
+    described_class.new(
       server_name: 'emvapi.emv3.com',
       login: 'api_login',
       password: 'api_password',
@@ -29,10 +29,6 @@ describe Emailvision::Api do
   end
 
   context 'Member' do
-
-    before(:each) do
-      subject.stub(:token) { '111token111' }
-    end
 
     it "retrieves member by email successfuly" do
       VCR.use_cassette('retrieves member by email successfuly') do
