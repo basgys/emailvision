@@ -6,24 +6,18 @@ module Emailvision
     headers 'Content-Type' => 'text/xml'
     
     # HTTP verbs allowed to trigger a call-chain
-    HTTP_VERBS = [:get, :post].freeze  
+    HTTP_VERBS = [:get, :post].freeze
+    ATTRIBUTES = [:token, :server_name, :endpoint, :login, :password, :key, :debug].freeze
 
     # Attributes
     class << self
-      attr_accessor :token, :server_name, :endpoint, :login, :password, :key, :debug
+      attr_accessor *ATTRIBUTES
     end
-    attr_accessor :token, :server_name, :endpoint, :login, :password, :key, :debug
+    attr_accessor *ATTRIBUTES
 
     def initialize(params = {})      
-      yield(self) if block_given?      
-      
-      self.server_name ||= params[:server_name]  || self.class.server_name
-      self.endpoint    ||= params[:endpoint]     || self.class.endpoint
-      self.login       ||= params[:login]        || self.class.login
-      self.password    ||= params[:password]     || self.class.password
-      self.key         ||= params[:key]          || self.class.key
-      self.token       ||= params[:token]        || self.class.token
-      self.debug       ||= params[:debug]        || self.class.debug      
+      yield(self) if block_given?
+      assign_attributes(params)
     end   
     
     # ----------------- BEGIN Pre-configured methods -----------------
@@ -178,6 +172,13 @@ module Emailvision
     end    
     
 	  private
+
+    def assign_attributes(parameters)
+      parameters or return
+      ATTRIBUTES.each do |attribute|
+        public_send("#{attribute}=", (parameters[attribute] || self.class.public_send(attribute)))
+      end     
+    end
 	
 	  def logger      
 	    if @logger.nil?
