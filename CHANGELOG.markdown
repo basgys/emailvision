@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.20
+------
+ * Fix critical bug (from 2.1.15 to 2.1.19)
+ * Refactor / Specs
+
 2.1.19
 -----
 
