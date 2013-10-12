@@ -7,7 +7,8 @@ group :development, :test do
   gem 'guard'
 end
 
-group :test do  
+group :test do
+  gem 'coveralls', require: false
   gem 'guard-rspec'
   gem 'rake' # Required by Travis CI
   gem 'rspec'

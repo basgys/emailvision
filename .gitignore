@@ -2,3 +2,4 @@
 *.html
 Gemfile.lock
 tmp
+/coverage/

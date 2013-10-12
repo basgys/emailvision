@@ -1,5 +1,8 @@
 require 'rubygems'
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'emailvision'
 require 'rspec'
 require 'vcr'
