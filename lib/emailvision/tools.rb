@@ -1,6 +1,15 @@
 module Emailvision
+  
+  # Toolbox for the API
+  # This class is mainly used to convert data
+  #  
   class Tools
 
+    # Sanitize values from a Hash
+    #
+    # @param [Hash] hash to sanitize
+    # @return [Hash] sanitized hash
+    #
     def self.sanitize_parameters(parameters)
       r_each(parameters) do |value|
         if value.kind_of?(DateTime) or value.kind_of?(Time)
@@ -21,6 +30,11 @@ module Emailvision
       date.strftime('%d/%m/%Y')
     end
 
+    # Convert hash keys to camel case
+    #
+    # @param [Object] structure to camelize
+    # @return [Object] structure with keys camelized (if any)
+    #
     def self.r_camelize(obj)
       if obj.is_a?(Hash)
         new_obj = {}
@@ -39,6 +53,11 @@ module Emailvision
       end
     end
 
+    # Convert data structure to XML
+    #
+    # @param [Object] structure to convert
+    # @return [String] XML structure
+    #
     def self.to_xml_as_is(obj)
       obj_xml = ""
 
@@ -51,6 +70,11 @@ module Emailvision
       obj_xml
     end
 
+    # Iterate throught a Hash recursively
+    #
+    # @param [Hash] structure to iterate
+    # @yield called for each data
+    #
     def self.r_each(hash, &block)
       return enum_for(:dfs, hash) unless block
  

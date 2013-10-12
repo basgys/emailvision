@@ -1,4 +1,7 @@
 module Emailvision
+
+  # This is where the communication with the API is made.
+  #
   class Api
     include HTTParty
     default_timeout 30
@@ -15,6 +18,11 @@ module Emailvision
     end
     attr_accessor *ATTRIBUTES
 
+    # Initialize
+    #
+    # @param [Hash] Instance attributes to assign
+    # @yield Freshly-created instance (optionnal)
+    #
     def initialize(params = {})
       yield(self) if block_given?
       assign_attributes(params)
@@ -23,9 +31,9 @@ module Emailvision
     # ----------------- BEGIN Pre-configured methods -----------------
 
     # Login to Emailvision API
-    # Return :
-    # - True if the connection has been established
-    # - False if the connection cannot be established or has already been established
+    #
+    # @return [Boolean] true if the connection has been established.
+    #
     def open_connection
       return false if connected?
       self.token = get.connect.open.call :login => @login, :password => @password, :key => @key
@@ -33,9 +41,9 @@ module Emailvision
     end
 
     # Logout from Emailvision API
-    # Return :
-    # - True if the connection has been destroyed
-    # - False if the connection cannot be destroyed or has already been destroyed    
+    #
+    # @return [Boolean] true if the connection has been destroyed
+    #
     def close_connection
       if connected?
         get.connect.close.call
@@ -49,19 +57,27 @@ module Emailvision
     end
 
     # Check whether the connection has been established or not
+    #
+    # @return [Boolean] true if the connection has been establshed
+    #
     def connected?
       !token.nil?
     end
     
+    # When a token is no longer valid, this method can be called.
+    # The #connected? method will return false
+    #
     def invalidate_token!
       self.token = nil
     end
     # ----------------- END Pre-configured methods -----------------    
 
-    # Perform the API call
-    # http_verb = (get, post, ...)
-    # method = Method to call
-    # parameters = Parameters to send (optionnal)
+    # Perform an API call
+    #
+    # @param [:get, :post] HTTP verb to use for the API call
+    # @param [String] method to call on the API
+    # @param [Hash] request parameters (optionnal)
+    #
     def call(http_verb, method, parameters = {})
       params ||= {}
 
@@ -104,20 +120,26 @@ module Emailvision
       end
     end
 
-    # Set token
-    # Override
+    # Set a new token
+    #
+    # @param [String] new token
+    #
     def token=(value)
       @token = value
     end
 
-    # Set endpoint
-    # Override
+    # Change API endpoint.
+    # This will close the connection to the current endpoint
+    #
+    # @param [String] new endpoint (apimember, apiccmd, apitransactional, ...)
+    #
     def endpoint=(value)
       close_connection
       @endpoint = value
     end
 
     # Base uri
+    #
     def base_uri
       "http://#{server_name}/#{endpoint}/services/rest/"
     end

@@ -5,6 +5,8 @@ gemspec
 
 group :development, :test do
   gem 'guard'
+  gem 'redcarpet' # Required by Yard
+  gem 'yard'
 end
 
 group :test do

@@ -1,4 +1,7 @@
 module Emailvision
+  
+  # API logger class
+  #
   class Logger < ::Logger
 
     attr_accessor :debug
@@ -9,11 +12,15 @@ module Emailvision
     end
 
     # Log a message sent to emailvision
+    #
+    # @param [String] message
     def send(message)
       info("[Emailvision] Send -> #{message}")
     end
 
     # Log a message received from emailvision
+    #
+    # @param [String] message    
     def receive(message)
       info("[Emailvision] Receive -> #{message}")
     end

@@ -1,8 +1,16 @@
 module Emailvision
+  
+  # API default exception
+  #
   class Exception < ::Exception
 
     attr_accessor :http_status, :error
 
+    # Initialize
+    #
+    # @param [Integer] HTTP status code
+    # @param [String] Error message
+    # 
     def initializer(http_status, error)
       self.http_status = http_status
       self.error = error
