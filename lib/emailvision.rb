@@ -13,6 +13,7 @@ module Emailvision
   autoload :Relation, 'emailvision/relation'
   autoload :Tools, 'emailvision/tools'
   autoload :Notification, 'emailvision/notification'
+  autoload :Version, 'emailvision/version'
 
   if defined?(Rails)
     require 'emailvision/railtie'
