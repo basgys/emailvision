@@ -1,3 +1,3 @@
 module Emailvision
-  Version = VERSION = '2.1.21'
+  Version = VERSION = '2.1.22'
 end
