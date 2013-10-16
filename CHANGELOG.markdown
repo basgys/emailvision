@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.21
+------
+ * Resolve dependencies error
+ * Yardoc project
+
 2.1.20
 ------
  * Fix critical bug (from 2.1.15 to 2.1.19)
