@@ -3,9 +3,14 @@ require 'spec_helper'
 
 describe Emailvision::Relation do
 
-  subject { described_class.new(api, :get) }
+  let(:request) { double("request") }
+  subject { described_class.new(api, request) }
 
   let(:api) { allow(double("api")).to receive(:call) }
+
+  before(:each) do
+    allow(request).to receive(:prepare)
+  end
 
   context "#initialize" do
 
@@ -34,7 +39,7 @@ describe Emailvision::Relation do
   context "#call" do
 
     it "triggers a call" do
-      expect(api).to receive(:call).with(:get, 'get/member/getMemberByEmail', {:uri=>["basgys@gmail.com"]})
+      expect(api).to receive(:call)
       subject.get.member.get_member_by_email(uri: ['basgys@gmail.com']).call
     end
 

@@ -78,27 +78,19 @@ module Emailvision
     # @param [String] method to call on the API
     # @param [Hash] request parameters (optionnal)
     #
-    def call(http_verb, method, parameters = {})
-      params ||= {}
-
+    def call(request)
       # == Check presence of these essential attributes ==
       unless server_name and endpoint
         raise Emailvision::Exception.new "Cannot make an API call without a server name and an endpoint !"
       end
 
-      # == Sanitize parameters ==
-      parameters = Emailvision::Tools.sanitize_parameters(parameters)
-
       retries = 2
       begin
-        uri = prepare_uri(method, parameters)
-        body = prepare_body(parameters)
+        logger.send "#{request.uri} with query : #{request.parameters} and body : #{request.body}"
 
-        logger.send "#{uri} with query : #{parameters} and body : #{body}"
+        response = perform_request(request)
 
-        response = perform_request(http_verb, uri, parameters, body)
-
-        extract_response(response)
+        Emailvision::Response.new(response, logger).extract
       rescue Emailvision::Exception => e
         if e.message =~ /Your session has expired/ or e.message =~ /The maximum number of connection allowed per session has been reached/
           self.close_connection
@@ -147,57 +139,18 @@ module Emailvision
     # Generate call-chain triggers
     HTTP_VERBS.each do |http_verb|
       define_method(http_verb) do
-        Emailvision::Relation.new(self, http_verb)
+        Emailvision::Relation.new(self, build_request(http_verb))
       end
     end
 
     private
 
-      def prepare_uri(method, parameters)
-        uri = base_uri + method
-        if parameters[:uri]
-          uri += token ? "/#{token}/" : '/'
-          uri += (parameters[:uri].respond_to?(:join) ? parameters[:uri] : [parameters[:uri]]).compact.join '/'
-          parameters.delete :uri
-        elsif parameters[:body]
-          uri += token ? "/#{token}/" : '/'
-        else
-          parameters[:token] = token
-        end
-        uri
+      def build_request(http_verb)
+        Emailvision::Request.new(http_verb, token, server_name, endpoint)
       end
 
-      def prepare_body(parameters)
-        body = parameters[:body] || {}
-        parameters.delete :body
-        # 2. Camelize all keys
-        body = Emailvision::Tools.r_camelize body
-        # 3. Convert to xml
-        Emailvision::Tools.to_xml_as_is body
-      end
-
-      def perform_request(http_verb, uri, parameters, body)
-        self.class.send http_verb, uri, :query => parameters, :body => body, :timeout => 30
-      end
-
-      def extract_response(response)
-        http_code = response.header.code
-        content = {}
-        begin
-          content = Crack::XML.parse response.body
-        rescue MultiXml::ParseError => e
-          logger.send "#{uri} Error when parsing response body (#{e.to_s})"
-        end
-        logger.receive content.inspect
-
-        if (http_code == "200") and (content and content["response"])
-          response = content["response"]["result"] || content["response"] 
-        else
-          raise Emailvision::Exception.new "#{http_code} - #{content}"
-        end
-      end
-
-      def format_response()
+      def perform_request(request)
+        self.class.send request.http_verb, base_uri + request.uri, :query => request.parameters, :body => request.body, :timeout => 30
       end
 
       def assign_attributes(parameters)

@@ -3,12 +3,12 @@ module Emailvision
   # Relation is used for API-chained call
   # 
   # e.g. emv.get.campaign.last(:limit => 5).call
-  #    
+  # 
   class Relation
 
-    def initialize(instance, http_verb)
+    def initialize(instance, request)
       @instance = instance
-      @http_verb = http_verb
+      @request = request
       @uri = []
       @options = {}
     end
@@ -20,7 +20,8 @@ module Emailvision
     #
     def call(*args)
       @options.merge! extract_args(args)
-      @instance.call @http_verb, @uri.join('/'), @options
+      @request.prepare(@uri.join('/'), @options)
+      @instance.call(@request)
     end
 
     def method_missing(method, *args)

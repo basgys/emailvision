@@ -70,6 +70,7 @@ describe Emailvision::Api do
 
   context 'Relation' do
 
+    let(:request) { double("request") }
     let(:relation) { Emailvision::Relation }
 
     before do
@@ -79,7 +80,8 @@ describe Emailvision::Api do
     [:get, :post].each do |verb|
 
       it "returns a relation when #{verb} is called" do
-        expect(relation).to receive(:new).with(subject, verb)
+        allow(subject).to receive(:build_request).with(verb).and_return(request)
+        expect(relation).to receive(:new).with(subject, request)
         expect(subject.send(verb)).to be_a(relation.class)
       end
 

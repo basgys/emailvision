@@ -11,9 +11,11 @@ module Emailvision
   autoload :Exception, 'emailvision/exception'
   autoload :Logger, 'emailvision/logger'
   autoload :Relation, 'emailvision/relation'
+  autoload :Request, 'emailvision/request'
+  autoload :Response, 'emailvision/response'
   autoload :Tools, 'emailvision/tools'
   autoload :Notification, 'emailvision/notification'
-  autoload :Version, 'emailvision/version'
+  autoload :Version, 'emailvision/version'  
 
   if defined?(Rails)
     require 'emailvision/railtie'
