@@ -2,7 +2,7 @@ module Emailvision
   
   # API default exception
   #
-  class Exception < ::Exception
+  class Exception < ::StandardError
 
     attr_accessor :http_status, :error
 
