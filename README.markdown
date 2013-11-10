@@ -214,6 +214,11 @@ TODO
  * Improves logger (log file, ..)
  * Write some example in wiki pages
 
+License
+-------
+
+Please see [LICENSE](https://github.com/basgys/emailvision/blob/master/LICENSE) for licensing details.
+
 Author
 ------
 

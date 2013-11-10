@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.description = "REST API wrapper interacting with Emailvision"    
   s.version     = Emailvision::Version
   s.date        = Time.now.strftime('%Y-%m-%d')
+  s.license     = 'MIT'
 
   s.files       = Dir["lib/**/*"]
   s.require_path = 'lib'
