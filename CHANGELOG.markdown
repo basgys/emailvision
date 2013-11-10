@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.2
+------
+ * Ensure compatibility with Rails 4.0.x (thanks joshmcmillan)
+ * Improve exception system
+ * Expired sessions and maximum number of connection allowed per session errors are no longer retried, but raise an Emailvision::SessionError.
+ * Fix & Improvements
+
 2.1.21
 ------
  * Resolve dependencies error
