@@ -13,22 +13,40 @@ module Emailvision
       @logger = logger
     end
 
-    def extract
-      http_code = response.header.code
-      content = {}
-      begin
-        content = Crack::XML.parse response.body
-      rescue MultiXml::ParseError => e
-        logger.send "#{uri} Error when parsing response body (#{e.to_s})"
-      end
-      logger.receive content.inspect
+    def extract      
+      logger.receive(content.inspect)
 
-      if (http_code == "200") and (content and content["response"])
+      if succeed?
         response = content["response"]["result"] || content["response"] 
       else
-        raise Emailvision::Exception.new "#{http_code} - #{content}"
+        handle_errors
       end
+    rescue MultiXml::ParseError, REXML::ParseException => error
+      wrapped_error = Emailvision::MalformedResponse.new(error)
+      raise wrapped_error, "Error when parsing response body"
     end
+
+    private
+
+      def succeed?
+        (http_code == "200") and (content and content["response"])
+      end
+
+      def handle_errors
+        if content =~ /Your session has expired/ or content =~ /The maximum number of connection allowed per session has been reached/
+          raise Emailvision::SessionError, content
+        else
+          raise Emailvision::RequestError, content
+        end
+      end
+
+      def content
+        @content ||= Crack::XML.parse(response.body)
+      end
+
+      def http_code
+        response.header.code
+      end
 
   end
 end

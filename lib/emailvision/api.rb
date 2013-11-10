@@ -30,6 +30,15 @@ module Emailvision
 
     # ----------------- BEGIN Pre-configured methods -----------------
 
+    # Reset session
+    #
+    # Useful when the session has expired.
+    #
+    def reset_session
+      close_connection
+      open_connection      
+    end
+
     # Login to Emailvision API
     #
     # @return [Boolean] true if the connection has been established.
@@ -74,41 +83,20 @@ module Emailvision
 
     # Perform an API call
     #
-    # @param [:get, :post] HTTP verb to use for the API call
-    # @param [String] method to call on the API
-    # @param [Hash] request parameters (optionnal)
+    # @param [Emailvsion::Request] Request to perform
     #
     def call(request)
       # == Check presence of these essential attributes ==
       unless server_name and endpoint
-        raise Emailvision::Exception.new "Cannot make an API call without a server name and an endpoint !"
+        raise Emailvision::Exception, "Cannot make an API call without a server name and an endpoint !"
       end
 
-      retries = 2
-      begin
+      with_retries do
         logger.send "#{request.uri} with query : #{request.parameters} and body : #{request.body}"
 
         response = perform_request(request)
 
-        Emailvision::Response.new(response, logger).extract
-      rescue Emailvision::Exception => e
-        if e.message =~ /Your session has expired/ or e.message =~ /The maximum number of connection allowed per session has been reached/
-          self.close_connection
-          self.open_connection
-          if((retries -= 1) >= 0)
-            retry
-          else
-            raise e
-          end
-        else
-          raise e
-        end
-      rescue Errno::ECONNRESET, Timeout::Error => e
-        if((retries -= 1) >= 0)
-          retry
-        else
-          raise e
-        end
+        Emailvision::Response.new(response, logger).extract        
       end
     end
 
@@ -157,6 +145,19 @@ module Emailvision
         parameters or return
         ATTRIBUTES.each do |attribute|
           public_send("#{attribute}=", (parameters[attribute] || self.class.public_send(attribute)))
+        end
+      end
+
+      def with_retries
+        retries = 3
+        begin
+          yield
+        rescue Errno::ECONNRESET, Timeout::Error => e          
+          if ((retries -= 1) > 0)
+            retry
+          else
+            raise e
+          end          
         end
       end
 

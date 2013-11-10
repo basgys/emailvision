@@ -143,4 +143,27 @@ describe Emailvision::Api do
 
   end
 
+  context "Exceptions" do
+
+    it "opens connection with parsing error" do
+      VCR.use_cassette('opens connection with parsing error') do
+        expect { subject.open_connection }.to raise_error(Emailvision::MalformedResponse)
+      end
+    end
+
+    it "reset connection and retry request 3 times when request has timed out" do
+      request = double("request")      
+      allow(request).to receive(:http_verb).and_return(:get)
+      allow(request).to receive(:uri).and_return("/fake/uri")
+      allow(request).to receive(:parameters).and_return([])
+      allow(request).to receive(:body).and_return("")
+
+      allow(subject).to receive(:perform_request).and_raise(Timeout::Error)
+
+      expect(subject).to receive(:perform_request).exactly(3).times
+      expect { subject.call(request) }.to raise_error(Timeout::Error)
+    end
+
+  end
+
 end
